@@ -314,18 +314,11 @@ export default function Home() {
         </section>
         <section className="gallery section">
           <div className="gallery__container container grid">
-            <div className="gallery__image">
-              <Image src={GalleryImg1} alt="image" className="gallery__img" />
-            </div>
-            <div className="gallery__image">
-              <Image src={GalleryImg2} alt="image" className="gallery__img" />
-            </div>
-            <div className="gallery__image">
-              <Image src={GalleryImg3} alt="image" className="gallery__img" />
-            </div>
-            <div className="gallery__image">
-              <Image src={GalleryImg4} alt="image" className="gallery__img" />
-            </div>
+            {[GalleryImg1, GalleryImg2, GalleryImg3, GalleryImg4].map((img, i) => (
+              <div key={i} className="gallery__image">
+                <Image src={img} alt="image" className="gallery__img" />
+              </div>
+            ))}
           </div>
         </section>
         <section className="contact section" id="contact">
@@ -345,47 +338,33 @@ export default function Home() {
                   </div>
                   <h3 className="contact__subtitle">Write to me</h3>
                   <div className="contact__social">
-                    <a href="https://m.me/bedimcode" target="_blank" className="contact__social-link">
-                      <i className="ri-messenger-fill"></i>
-                    </a>
-                    <a href="https://api.whatsapp.com/send?phone=51123456789&text=Hello" target="_blank" className="contact__social-link">
-                      <i className="ri-whatsapp-fill"></i>
-                    </a>
-                    <a href="https://web.telegram.org" target="_blank" className="contact__social-link">
-                      <i className="ri-telegram-fill"></i>
-                    </a>
-                    <a href="mailto:medical@email.com" target="_blank" className="contact__social-link">
-                      <i className="ri-mail-fill"></i>
-                    </a>
+                    {[
+                      { link: "https://m.me/bedimcode", icon: "ri-messenger-fill" },
+                      { link: "https://api.whatsapp.com/send?phone=51123456789&text=Hello", icon: "ri-messenger-fill" },
+                      { link: "https://web.telegram.org", icon: "ri-messenger-fill" },
+                      { link: "mailto:medical@email.com", icon: "ri-messenger-fill" },
+                    ].map((item, i) => (
+                      <a key={i} href={item.link} target="_blank" className="contact__social-link">
+                        <i className={item.icon}></i>
+                      </a>
+                    ))}
                   </div>
                 </div>
-                <div>
-                  <div className="contact__icon">
-                    <i className="ri-hospital-fill"></i>
+                {[
+                  { icon: "ri-hospital-fill", title: "Location", text1: "Lima - Peru", text2: "Av. The Trees #0123" },
+                  { icon: "ri-time-fill", title: "Attention", text1: "Monday - Friday", text2: "8am - 6pm" },
+                  { icon: "ri-smartphone-fill", title: "Phone number", text1: "=0123(00)-765-4321", text2: "+00-0123456" },
+                ].map((item, i) => (
+                  <div key={i}>
+                    <div className="contact__icon">
+                      <i className={item.icon}></i>
+                    </div>
+                    <h3 className="contact__subtitle">{item.title}</h3>
+                    <address className="contact__address">
+                      {item.text1} <br /> {item.text2}
+                    </address>
                   </div>
-                  <h3 className="contact__subtitle">Location</h3>
-                  <address className="contact__address">
-                    Lima - Peru <br /> Av. The Trees #0123
-                  </address>
-                </div>
-                <div>
-                  <div className="contact__icon">
-                    <i className="ri-time-fill"></i>
-                  </div>
-                  <h3 className="contact__subtitle">Attention</h3>
-                  <address className="contact__address">
-                    Monday - Friday <br /> 8am - 6pm
-                  </address>
-                </div>
-                <div>
-                  <div className="contact__icon">
-                    <i className="ri-smartphone-fill"></i>
-                  </div>
-                  <h3 className="contact__subtitle">Phone number</h3>
-                  <address className="contact__address">
-                    =0123(00)-765-4321 <br /> +00-0123456
-                  </address>
-                </div>
+                ))}
               </div>
             </div>
             <div className="contact__map">
@@ -400,26 +379,21 @@ export default function Home() {
             <i className="ri-stethoscope-line"></i> Medical
           </a>
           <div className="footer__links">
-            <a href="#home" className="footer__link">Home</a>
-            <a href="#about" className="footer__link">About Us</a>
-            <a href="#prices" className="footer__link">Prices</a>
+            {[{ title: "Home", hash: "#home"}, { title: "About Us", hash: "#about"}, { title: "Prices", hash: "#prices"}]
+            .map((item, i) => (<a key={i} href={item.hash}>{item.title}</a>))}
           </div>
           <div className="footer__social">
-            <a href="https://www.facebook.com/bedimcode" className="footer__social-link">
-              <i className="ri-facebook-circle-fill"></i>
-            </a>
-            <a href="https://www.instagram.com/bedimcode/" className="footer__social-link">
-              <i className="ri-instagram-fill"></i>
-            </a>
-            <a href="https://twitter.com/" className="footer__social-link">
-              <i className="ri-twitter-x-fill"></i>
-            </a>
-            <a href="https://www.youtube.com/@Bedimcode" className="footer__social-link">
-              <i className="ri-youtube-fill"></i>
-            </a>
-            <a href="https://api.whatsapp.com/send?phone=51123456789&text=Hello" className="footer__social-link">
-              <i className="ri-whatsapp-fill"></i>
-            </a>
+            {[
+              { link: "https://www.facebook.com/bedimcode", icon: "ri-facebook-circle-fill" },
+              { link: "https://www.instagram.com/bedimcode/", icon: "ri-instagram-fill" },
+              { link: "https://twitter.com/", icon: "ri-twitter-x-fill" },
+              { link: "https://www.youtube.com/@Bedimcode", icon: "ri-youtube-fill" },
+              { link: "https://api.whatsapp.com/send?phone=51123456789&text=Hello", icon: "ri-whatsapp-fill" },
+            ].map((item, i) => (
+              <a key={i} href={item.link} target="_blank" className="footer__social-link">
+                <i className={item.icon}></i>
+              </a>
+            ))}
           </div>
         </div>
         <span className="footer__copy">
