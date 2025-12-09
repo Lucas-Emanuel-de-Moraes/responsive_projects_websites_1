@@ -19,7 +19,7 @@ export default function Home() {
   const [isScrolled, setIsScrolled] = useState<boolean>(false)
   const [showScrollUp, setShowScrollUp] = useState<boolean>(false)
   const [activeLink, setActiveLink] = useState<string>("")
-  const [darkTheme, setDarkTheme] = useState<boolean>(false)
+  const [darkTheme, setDarkTheme] = useState<boolean>(true)
 
   useEffect(() => {
     const sections = document.querySelectorAll<HTMLElement>("section[id]")
@@ -89,7 +89,7 @@ export default function Home() {
           </div>
           <div className="nav__buttons">
             <i 
-              className={`${darkTheme ? "ri-moon-fill" : "ri-sun-fill"} nav__theme`} 
+              className={`${darkTheme ? "ri-sun-fill" : "ri-moon-fill"} nav__theme`} 
               id="theme-button"
               onClick={() => setDarkTheme(d => !d)}
             ></i>
