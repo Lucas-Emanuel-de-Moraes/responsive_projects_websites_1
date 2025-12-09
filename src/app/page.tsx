@@ -18,96 +18,51 @@ export default function Home() {
   const [menu, setMenu] = useState<boolean>(false)
   const [isScrolled, setIsScrolled] = useState<boolean>(false)
   const [showScrollUp, setShowScrollUp] = useState<boolean>(false)
-
-  useEffect(() => {
-    const handleScroll = () => setIsScrolled(window.scrollY >= 50)
-    const handleScrollUp = () => setShowScrollUp(window.scrollY >= 350)
-
-    window.addEventListener("scroll", handleScroll);
-    window.addEventListener("scroll", handleScrollUp);
-    return () => {
-      window.removeEventListener("scroll", handleScroll);
-      window.removeEventListener("scroll", handleScrollUp);
-    }
-  }, [])
+  const [activeLink, setActiveLink] = useState<string>("")
+  const [darkTheme, setDarkTheme] = useState<boolean>(false)
 
   useEffect(() => {
     const sections = document.querySelectorAll<HTMLElement>("section[id]")
+    const handleScroll = () => setIsScrolled(window.scrollY >= 50)
+    const handleScrollUp = () => setShowScrollUp(window.scrollY >= 350)
     const scrollActive = () => {
-      const scrollDown = window.scrollY
       sections.forEach((current) => {
-        const sectionHeight = current.offsetHeight
-        const sectionTop = current.offsetTop - 58
-        const sectionId = current.getAttribute("id")
-        const sectionClass = document.querySelector<HTMLAnchorElement>(`.nav__menu a[href*=${sectionId}]`)
-        if (
-          scrollDown > sectionTop &&
-          scrollDown <= sectionTop + sectionHeight
-        ) {
-          sectionClass?.classList.add("active-link")
-        } else {
-          sectionClass?.classList.remove("active-link")
+        if (window.scrollY > (current.offsetTop - 58) && window.scrollY <= (current.offsetTop - 58) + current.offsetHeight) {
+          setActiveLink(current.id)
         }
       })
     }
 
+    window.addEventListener("scroll", handleScroll);
+    window.addEventListener("scroll", handleScrollUp);
     window.addEventListener("scroll", scrollActive)
-    return () => window.removeEventListener("scroll", scrollActive)
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+      window.removeEventListener("scroll", handleScrollUp);
+      window.removeEventListener("scroll", scrollActive);
+    }
   }, [])
 
   useEffect(() => {
-    const themeButton = document.getElementById('theme-button')
-    if (!themeButton) return
-
-    const darkTheme = "dark-theme"
-    const iconTheme = "ri-sun-fill"
-
-    const selectedTheme = localStorage.getItem("selected-theme")
-    const selectedIcon = localStorage.getItem("selected-icon")
-
-    const getCurrentTheme = () =>
-      document.body.classList.contains(darkTheme) ? "dark" : "light"
-
-    const getCurrentIcon = () =>
-      themeButton.classList.contains(iconTheme) ? "ri-sun-fill" : "ri-moon-fill"
-
-    if (selectedTheme) {
-      document.body.classList[selectedTheme === "dark" ? "add" : "remove"](darkTheme)
-      themeButton.classList[selectedIcon === "ri-sun-fill" ? "add" : "remove"](iconTheme)
-    }
-
-    const toggleTheme = () => {
-      document.body.classList.toggle(darkTheme)
-      themeButton.classList.toggle(iconTheme)
-
-      localStorage.setItem("selected-theme", getCurrentTheme())
-      localStorage.setItem("selected-icon", getCurrentIcon())
-    }
-
-    themeButton.addEventListener("click", toggleTheme)
-
-    return () => themeButton.removeEventListener("click", toggleTheme)
-  }, [])
+    const handleTheme = () => document.body.classList[darkTheme ? "add" : "remove"]("dark-theme")
+    return () => handleTheme()
+  }, [darkTheme])
 
   useEffect(() => {
     import("scrollreveal").then((ScrollReveal) => {
-      const sr = ScrollReveal.default({
-        origin: 'top',
-        distance: '60px',
-        duration: 2000,
-      })
-      sr.reveal(".home__content", {origin: "bottom"})
-      sr.reveal(".home__info", {origin: "bottom", delay: 800})
-      sr.reveal(".home__data", {delay: 1400})
-      sr.reveal(".home__button", {origin: "left", delay: 1800})
-      sr.reveal(".delivery__data", {origin: "right"})
-      sr.reveal(".delivery__content", {origin: "left", delay: 600})
-      sr.reveal(".delivery__img", {delay: 1200})
-      sr.reveal(".about__data, .contact__map", {origin: "left"})
-      sr.reveal(".about__img, .contact__data", {origin: "right"})
+      const sr = ScrollReveal.default({ origin: 'top', distance: '60px', duration: 2000 })
+      sr.reveal(".home__content", { origin: "bottom" })
+      sr.reveal(".home__info", { origin: "bottom", delay: 800 })
+      sr.reveal(".home__data", { delay: 1400 })
+      sr.reveal(".home__button", { origin: "left", delay: 1800 })
+      sr.reveal(".delivery__data", { origin: "right" })
+      sr.reveal(".delivery__content", { origin: "left", delay: 600 })
+      sr.reveal(".delivery__img", { delay: 1200 })
+      sr.reveal(".about__data, .contact__map", { origin: "left" })
+      sr.reveal(".about__img, .contact__data", { origin: "right" })
       sr.reveal(".prices__box")
-      sr.reveal(".prices__swiper", {origin: "bottom", delay: 600})
-      sr.reveal(".gallery__image", {interval: 100})
+      sr.reveal(".prices__swiper", { origin: "bottom", delay: 600 })
+      sr.reveal(".gallery__image", { interval: 100 })
       sr.reveal(".footer__container")
     })
   }, [])
@@ -124,7 +79,7 @@ export default function Home() {
               {[{ name: "Home" }, { name: "Delivery" }, { name: "About Us" }, { name: "Prices" }, { name: "Contact" }]
               .map((item, index) => (
                 <li key={index} onClick={() => setMenu(false)}>
-                  <a href={`#${item.name.split(" ")[0].toLowerCase()}`} className="nav__link">{item.name}</a>
+                  <a href={`#${item.name.split(" ")[0].toLowerCase()}`} className={`nav__link ${activeLink === item.name.split(" ")[0].toLowerCase() ? "active-link" : ""}`}>{item.name}</a>
                 </li>
               ))}
             </ul>
@@ -133,7 +88,11 @@ export default function Home() {
             </div>
           </div>
           <div className="nav__buttons">
-            <i className="ri-moon-fill nav__theme" id="theme-button"></i>
+            <i 
+              className={`${darkTheme ? "ri-moon-fill" : "ri-sun-fill"} nav__theme`} 
+              id="theme-button"
+              onClick={() => setDarkTheme(d => !d)}
+            ></i>
             <div className="nav__toggle" id="nav-toggle" onClick={() => setMenu(true)}>
               <i className="ri-menu-line"></i>
             </div>
